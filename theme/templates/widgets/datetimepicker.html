@@ -1,0 +1,22 @@
+<div class="related-widget-wrapper">
+  <div class="input-group" id="{{ widget.datetimepicker_id }}" data-target-input="nearest">
+    {% include "django/forms/widgets/input.html" %}
+    <div class="input-group-append" data-target="#{{ widget.datetimepicker_id }}" data-toggle="datetimepicker">
+      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    $(function () {
+      $("#{{ widget.datetimepicker_id }}").datetimepicker({
+      timeZone: 'UTC',
+      format: "YYYY-MM-DD HH:mm Z",
+        icons: {
+          time:"far fa-clock"
+         }
+      });
+    });
+  });
+  </script>
+</div>

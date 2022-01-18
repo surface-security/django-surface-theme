@@ -1,0 +1,39 @@
+{% load surface_theme %}
+<div class="page-inner">
+  <div class="row">
+    <div class="col-md-4 home-card">
+        <div class="card mh-100 overflow-y-scroll">
+            <div class="card-header">
+            <div class="card-title">List of Modules</div>
+            </div>
+            <div class="card-body pb-0">
+                {% if app_list %}
+                    {% for app in app_list %}
+                    <div class="row d-flex surface-app-{{ app.app_label }}">
+                        <div class="flex-1 pt-1 ml-2">
+                            <a href="{{ app.app_url }}" class="section" title="Models in the {{ app.name }} application">
+                                <h5 class="fw-bold mb-1">{{ app.name }}</h5>
+                            </a>
+                        </div>
+                        <div class="container">
+                        {% for model in app.models %}
+                            <div class="row">
+                              <div class="col-sm">
+                                {% if model.add_url %}<a href="{{ model.add_url }}"><i class="fas fa-plus-circle text-primary"></i></a>{% else %}<i class="far fa-dot-circle text-primary"></i>{% endif %}
+                                <a href="{{ model.admin_url }}"> {{ model.name }}</a>
+                              </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="separator-dashed"></div>
+                    {% endfor %}
+                {% else %}
+                You don’t have permission to view or edit anything.
+                {% endif %}
+            <div class="separator-dashed"></div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

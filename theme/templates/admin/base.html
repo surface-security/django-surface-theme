@@ -1,0 +1,59 @@
+{% load i18n static surface_theme %}<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>{% get_title False %} - {% block title %}{% endblock %}</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="icon" href="{% static '/assets/logo.png' %}" type="image/x-icon"/>
+	{% include 'includes/styles.html' %}
+
+	<!-- Specific CSS goes HERE -->
+	{% block stylesheets %}{% endblock stylesheets %}
+	{% block extrahead %}{% endblock extrahead %}
+</head>
+<body data-background-color="bg3" onload="onLoad()">
+	<div class="wrapper {% block layout %}{% endblock layout %}">
+		{% include 'includes/navigation.html' %}
+		{% include 'includes/sidenav.html' %}
+		<div class="main-panel">
+			<div class="content">
+				{% block messages %}
+					{% if messages %}
+						<ul class="messagelist p-0">
+							{% for message in messages %}
+								<li {% if message.tags %} class="bg-{{ message.tags }}"{% endif %}>
+									<div class="row">
+										<div class="col-11">
+											{{ message|capfirst }}
+										</div>
+										<div class="col-1">
+											<i class="fas fa-times message-close"></i>
+										</div>
+									</div>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+				{% endblock messages %}
+
+				<!-- Content -->
+				<div id="content" class="{% block coltype %}colM{% endblock %}">
+					{% block content %}
+						{% block object-tools %}{% endblock %}
+					{{ content }}
+					{% endblock %}
+				</div>
+				<!-- END Content -->
+
+				{{ delete_confirmation_context }}
+			</div>
+			{% block footer %}{% include 'includes/footer.html' %}{% endblock %}
+
+		</div>
+	</div>
+
+	<!-- Specific JS goes HERE -->
+	{% include 'includes/scripts.html' %}
+  {% block javascripts %}{% endblock javascripts %}
+</body>
+</html>

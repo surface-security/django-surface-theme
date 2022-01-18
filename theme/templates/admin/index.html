@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% load surface_theme %}
+
+{% block title %} Home {% endblock title %}
+
+{% block content %}
+  {% if app_label %}
+    {% include 'admin/home/app_list.html' %}
+  {% else %}
+    <div class="panel-header bg-primary-gradient">
+      <div class="page-inner py-5">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+          <div>
+            <h2 class="text-white pb-2 fw-bold">{% get_title False %}</h2>
+			<h5 class="text-white op-7 mb-2">Security Intelligence Automation Platform</h5>
+          </div>
+          <div class="ml-md-auto py-2 py-md-0">
+            <a href="https://olympus.secsy.prd.internal/" class="btn btn-white btn-round btn-round mr-2" target="_blank" rel="noopener noreferrer">
+              More Dashboards in Olympus
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'admin/home/users_stats.html' %}
+
+    <div class="page-inner mt--5">
+      <div class="row">
+        {% include 'admin/home/modules_list.html' %}
+        {% include 'admin/home/links_list.html' %}
+        {% include 'admin/home/activity.html' %}
+      </div>
+    </div>
+    {% endif %}
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

@@ -1,0 +1,48 @@
+{% load surface_theme %}
+<div class="card card-profile">
+    {% user_profile request.user as user_profile %}
+    <div class="card-header">
+        <div class="profile-picture">
+            <div class="avatar avatar-xl">
+                <img src="{{ request.user|user_avatar }}" alt="..." class="avatar-img rounded-circle">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="user-profile text-center">
+            <div class="name">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+            <div class="job">{{ user_profile.title }}</div>
+            <div class="desc">{{ user_profile.location }}</div>
+
+            <div class="social-media">
+                <a class="btn btn-info btn-twitter btn-sm btn-link" href="#">
+                    <span class="btn-label just-icon"><i class="fab fa-twitter"></i> </span>
+                </a>
+                <a class="btn btn-danger btn-sm btn-link" rel="publisher" href="#">
+                    <span class="btn-label just-icon"><i class="fab fa-google-plus"></i> </span>
+                </a>
+                <a class="btn btn-primary btn-sm btn-link" rel="publisher" href="#">
+                    <span class="btn-label just-icon"><i class="fab fa-facebook-f"></i> </span>
+                </a>
+                <a class="btn btn-danger btn-sm btn-link" rel="publisher" href="#">
+                    <span class="btn-label just-icon"><i class="fab fa-dribbble"></i> </span>
+                </a>
+            </div>
+            <div class="view-profile">
+                <a href="#" class="btn btn-secondary btn-block">View Full Profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row user-stats text-center">
+            <div class="col">
+                <div class="number">125</div>
+                <div class="title">Owned TLAs</div>
+            </div>
+            <div class="col">
+                <div class="number">25K</div>
+                <div class="title">Security Score</div>
+            </div>
+        </div>
+    </div>
+</div>

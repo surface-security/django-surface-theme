@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<select class="selectpicker border rounded mt-1 mr-1" data-live-search="true" data-live-search-placeholder="Search" data-width="fit" title="{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}" onchange="selected_option(this.options[this.selectedIndex].value);">
+{% for choice in choices %}
+    <option {% if choice.selected %} class="selected" selected{% endif %} value="{{ choice.query_string|iriencode }}">
+        {% if choice.display == 'All' or choice.display == 'Any date' %}
+            {% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}
+        {% else %}
+            {{ choice.display }}
+        {% endif %}
+    </option>
+{% endfor %}
+</select>

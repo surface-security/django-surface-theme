@@ -1,0 +1,109 @@
+{% extends "admin/change_form.html" %}
+
+{% load surface_theme i18n admin_urls static admin_modify %}
+
+{% block extrahead %}
+{{ block.super.super }}
+{{ media.css }}
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super}}
+{{ media.js }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-header">
+            {% include 'includes/breadcrumbs.html' %}
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h4 class="card-title">{{ title }}</h4>
+
+                            {% block n %}
+                            {% if change %}
+                                {% if not is_popup %}
+                                  <ul class="object-tools ml-auto">
+                                    {% block object-tools-items %}
+                                      {% change_form_object_tools %}
+                                    {% endblock %}
+                                  </ul>
+                                {% endif %}
+                            {% endif %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form_url %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" novalidate>{% csrf_token %}{% block form_top %}{% endblock %}
+                            <div>
+                            {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}
+                            {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
+                            {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+                            {% if errors %}
+                                <p class="errornote">
+                                {% if errors|length == 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
+                                </p>
+                                {{ adminform.form.non_field_errors }}
+                            {% endif %}
+
+                            {% block field_sets %}
+                                    <ul class="nav nav-tabs" id="menu-tabs" role="tablist">
+
+                                        {% with counter=0 %}
+                                        {% for fieldset in adminform %}
+                                          {% increment counter as counter %}
+                                          <li class="nav-item">
+                                            <a class="nav-link {% if counter == 1 %}active{% endif %}" id="{% if fieldset.name %}{{ fieldset.name|make_anchor }}{% else %}General{% endif %}-tab" data-toggle="tab" href="#{% if fieldset.name %}{{ fieldset.name|make_anchor }}{% else %}General{% endif %}" role="tab" aria-controls="{% if fieldset.name %}{{ fieldset.name|make_anchor }}{% else %}General{% endif %}" aria-selected="true">
+                                                {% if fieldset.name %}<h4 class="m-0">{{ fieldset.name }}</h4>{% else %}<h4 class="m-0">General</h4>{% endif %}
+                                            </a>
+                                          </li>
+                                        {% endfor %}
+                                        {% for inline_admin_form in inline_admin_formsets %}
+                                            {% increment counter as counter %}
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="{% if inline_admin_form.opts.verbose_name_plural %}{{ inline_admin_form.opts.verbose_name_plural|make_anchor }}{% else %}Inline{% endif %}-tab" data-toggle="tab" href="#{% if inline_admin_form.opts.verbose_name_plural %}{{ inline_admin_form.opts.verbose_name_plural|make_anchor }}{% else %}Inline{% endif %}" role="tab" aria-controls="{% if inline_admin_form.opts.verbose_name_plural %}{{ inline_admin_form.opts.verbose_name_plural|make_anchor }}{% else %}Inline{% endif %}" aria-selected="true">
+                                                    {% if inline_admin_form.opts.verbose_name_plural %}<h4 class="m-0">{{ inline_admin_form.opts.verbose_name_plural|capfirst }}</h4>{% else %}<h4 class="m-0">Inline</h4>{% endif %}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                        {% endwith %}
+                                    </ul>
+                                    <div class="tab-content p-0" id="menu-tabs-content">
+                                        {% with counter=0 %}
+                                        {% for fieldset in adminform %}
+                                            {% increment counter as counter %}
+                                              <div class="tab-pane fade {% if counter == 1 %}show active{% endif %}" id="{% if fieldset.name %}{{ fieldset.name|make_anchor }}{% else %}General{% endif %}" role="tabpanel" aria-labelledby="{% if fieldset.name %}{{ fieldset.name|make_anchor }}{% else %}General{% endif %}-tab">
+                                                {% include "admin/includes/fieldset.html" %}
+                                              </div>
+                                        {% endfor %}
+                                        {% for inline_admin_formset in inline_admin_formsets %}
+                                            {% increment counter as counter %}
+                                              <div class="tab-pane fade" id="{% if inline_admin_formset.opts.verbose_name_plural %}{{ inline_admin_formset.opts.verbose_name_plural|make_anchor }}{% else %}Inline{% endif %}" role="tabpanel" aria-labelledby="{% if inline_admin_formset.opts.verbose_name_plural %}{{ inline_admin_formset.opts.verbose_name_plural|make_anchor }}{% else %}Inline{% endif %}-tab">
+                                                  <div class="inline-related compact{% if inline_admin_formset.original or inline_admin_formset.show_url %} has_original{% endif %}{% if forloop.last %} empty-form last-related{% endif %}" id="{{ inline_admin_formsetsets.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+                                                    {% include inline_admin_formset.opts.template %}
+                                                  </div>
+                                              </div>
+                                        {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                            {% endblock %}
+
+                            {% block after_field_sets %}{% endblock %}
+
+                            {% block inline_field_sets %}{% endblock %}
+
+                            {% block after_related_objects %}{% endblock %}
+
+                            {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

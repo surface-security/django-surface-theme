@@ -1,0 +1,51 @@
+{% load i18n static %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}">
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+<script>
+    function datefilter_apply(event, qs_name, form_name){
+        event.preventDefault();
+        var query_string = $('input#'+qs_name).val();
+        var form_data = $('#'+form_name).serialize();
+        window.location = window.location.pathname + query_string + '&' + form_data;
+    }
+    function datefilter_reset(qs_name){
+        var query_string = $('input#'+qs_name).val();
+        window.location = window.location.pathname + query_string;
+    }
+</script>
+
+<div class="d-inline-block mr-1 justify-content-center align-self-center fit-width">
+  <div class="input-group datetimepicker mt-1" id="{{ spec.lookup_kwarg_within }}" data-target-input="nearest">
+    {% for choice in choices %}
+      {{ spec.form }}
+
+      <div class="input-group-append" data-target="#{{ spec.lookup_kwarg_within }}" data-toggle="datetimepicker">
+        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      $(document).ready(function () {
+          {% if LANGUAGE_CODE != 'en-us' %}
+          moment.locale('{{ LANGUAGE_CODE }}');
+          {% endif %}
+          var dt_input = $("#{{ spec.lookup_kwarg_within }}");
+          dt_input.datetimepicker({
+              timeZone: 'UTC',
+              degug: true,
+              format: "YYYY-MM-DD",
+          });
+
+          dt_input.on("change.datetimepicker", ({date, oldDate}) => {
+              window.location = window.location.pathname + '{{ choices.0.query_string|safe }}' +
+                              '&{{ spec.lookup_kwarg_within }}=' + date.format('YYYY-MM-DD')
+          });
+          dt_input.find('input').addClass("form-control");
+          dt_input.css("height", "46px");
+      });
+    });
+
+    </script>
+</div>

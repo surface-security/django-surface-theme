@@ -1,0 +1,19 @@
+{% if not admin_log %}
+    <p>Not Available</p>
+    {% else %}
+    <ol class="activity-feed">
+    {% for entry in admin_log %}
+    <li class="feed-item feed-item-{% if entry.is_addition %}success{% endif %}{% if entry.is_change %}warning{% endif %}{% if entry.is_deletion %}danger{% endif %}">
+        <time class="date" datetime="9-25"><i class="far fa-calendar-alt"></i> {{ entry.action_time }}</time>
+        <span class="text">
+        <i class="fas fa-user-alt"></i> {{ entry.user }} <i class="far fa-arrow-alt-circle-right"></i>
+        {% if entry.is_deletion or not entry.get_admin_url %}
+          {{ entry.content_type }} | {{ entry.pk }}
+        {% else %}
+            <a href="{{ entry.get_admin_url }}">{{ entry.content_type }} | {{ entry.pk }}</a>
+        {% endif %}
+        </span>
+    </li>
+{% endfor %}
+</ol>
+{% endif %}

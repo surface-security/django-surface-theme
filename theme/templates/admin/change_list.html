@@ -1,0 +1,158 @@
+{% extends "admin/base.html" %}
+{% load i18n admin_urls static admin_list surface_theme %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="page-inner">
+    <div class="page-header">
+        {% include 'includes/breadcrumbs.html' %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title">{{ title }}</h4>
+                        {% block object-tools %}
+                        <ul class="object-tools ml-auto">
+                            {% block object-tools-items %}
+                                {% change_list_object_tools %}
+                            {% endblock %}
+                        </ul>
+                        {% endblock %}
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if cl.formset and cl.formset.errors %}
+                        <p class="errornote">
+                        {% if cl.formset.total_error_count == 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
+                        </p>
+                        {{ cl.formset.non_form_errors }}
+                    {% endif %}
+
+                    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+                        <div class="row filters pl-15px mb-3">
+                          {% block search %}{% search_form cl %}{% endblock %}
+                          {% block filters %}
+                            {% if cl.has_filters %}
+                                {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+                            {% endif %}
+                          {% endblock %}
+                            <div class="align-self-center ml-auto pr-4">
+                                <span class="small quiet py-auto">{% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %} (<a href="?{% if cl.is_popup %}_popup=1{% endif %}">{% if cl.show_full_result_count %}{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}{% else %}{% trans "Show all" %}{% endif %}</a>)</span>
+                            </div>
+                        </div>
+                        <div>
+                          {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+                        </div>
+
+
+                        <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+                        {% if cl.formset %}
+                        <div>{{ cl.formset.management_form }}</div>
+                        {% endif %}
+
+                        {% block result_list %}
+                          {% result_list cl %}
+                        {% endblock %}
+
+                          <div class="changelist-footer fixed">
+                              <div class="row">
+                                <div class="col-12 col-md-6">
+                                    {% if action_form and cl.show_admin_actions %}{% admin_actions %}{% endif %}
+                                </div>
+                                  <div class="col-12 col-md-6">
+                                      <div class="p-2">
+                                          {% block pagination %}{% pagination cl %}{% endblock %}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {# FIXME: media.js should be used and DateRangeFilter should have tempusdominus in media #}
+    <script>
+    $(document).ready(function() {
+        var table = $('#multi-filter-select').DataTable({
+            "ordering": false,
+            "bDestroy": true,
+            "bProcessing": true,
+            "bDeferRender": false,
+            "paging": false,
+            "searching": false,
+            "select": true,
+            "info": false,
+            responsive: {
+                details: {
+                    type: 'column'
+                }
+            },
+            columnDefs: [ {
+                className: 'control',
+                orderable: false,
+                targets:   0
+            } ],
+            order: [ 1, 'asc' ],
+            "initComplete": function(){
+                $("#multi-filter-select").show();
+            },
+        });
+
+
+        $('#multi-filter-select_wrapper').addClass('p-0');
+
+        $('#action-toggle').on('click', function() {
+            var state = $(this).prop('checked');
+            $('.action-select').each(function(){
+                $(this).prop('checked', state);
+            });
+
+            var checkboxes = $('.action-select').length;
+            var selected = $('.action-select:checked').length;
+
+            $('.action-counter').text(selected + ' of ' + checkboxes + ' selected');
+            $('#select-all').css("display", "initial");
+        });
+
+        $('.action-select').on('change', function() {
+            var checkboxes = $('.action-select').length;
+            var selected = $('.action-select:checked').length;
+
+            $('.action-counter').text(selected + ' of ' + checkboxes + ' selected');
+
+            if (checkboxes == selected) {
+                $('#action-toggle').prop('checked', true);
+                $('#select-all').css("display", "initial");
+            }
+            else {
+                $('#action-toggle').prop('checked', false);
+                $('#select-all').css("display", "none");
+            }
+        });
+        $('#select-all').on('click', function() {
+            var input_value = $('input.select-across').val();
+
+            if (input_value == 1) {
+              $('input.select-across').val(0);
+              $(this).text("Select all entries");
+            }
+            else {
+              $('input.select-across').val(1);
+              $(this).text("Unselect all entries");
+            }
+        });
+    });
+    </script>
+{% endblock javascripts %}

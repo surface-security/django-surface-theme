@@ -1,0 +1,17 @@
+{% load i18n admin_urls %}
+{% load add_preserved_filters from admin_urls %}
+
+{% block object-tools-items %}
+{% if has_add_permission %}
+<li class="d-inline-block">
+    {% url cl.opts|admin_urlname:'add' as add_url %}
+    <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink">
+        <button class="btn btn-primary btn-round ml-auto">
+            <i class="fa fa-plus"></i>
+            {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+        </button>
+    </a>
+</li>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+recursive-include theme/static *
+recursive-include theme/templates *
+recursive-include theme/templatetags *

@@ -1,0 +1,37 @@
+{% load admin_urls %}
+
+<ul class="breadcrumbs m-0 p-0 text-uppercase">
+    <li class="nav-home">
+        <a href="{% url 'admin:index' %}">
+            <i class="fas fa-home"></i>
+        </a>
+    </li>
+    <li class="separator">
+        <i class="fas fa-chevron-right"></i>
+    </li>
+    {% if opts %}
+      {% if opts.app_label %}
+      <li class="nav-item">
+          <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name}}</a>
+      </li>
+      <li class="separator">
+          <i class="fas fa-chevron-right"></i>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        {% if has_view_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}
+      </li>
+      {% if add or original %}
+      <li class="separator">
+        <i class="fas fa-chevron-right"></i>
+      </li>
+      <li>
+        {% if add %}Add {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+      </li>
+      {% endif %}
+    {% else %}
+    <li class="nav-item">
+        <a href="{{ request.path }}">{{ title }}</a>
+    </li>
+    {% endif %}
+</ul>

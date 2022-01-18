@@ -1,0 +1,1 @@
+/* fake and empty so all django-admin media does not trigger anything twice */

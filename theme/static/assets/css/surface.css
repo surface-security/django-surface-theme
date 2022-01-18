@@ -1,0 +1,200 @@
+html, body, .wrapper {
+    height: 100%;
+}
+
+.main-header {
+  z-index: 2;
+}
+#search-nav {
+    max-width: 60% !important;
+    width: 60% !important;
+}
+.sidebar .nav>.nav-item a p {
+    color: #ffffff !important;
+}
+.sidebar .nav-collapse li a {
+    margin-bottom: 3px!important;
+    padding: 5px 5px!important;
+}
+.sidebar.sidebar-style-2 .nav .nav-item {
+    padding: 0 10px !important;
+}
+.sidebar .nav>.nav-item a i {
+    font-size: 16px !important;
+    line-height: 20px !important;
+}
+.logo-header {
+    padding-left: 10px !important;
+}
+.sidebar[data-background-color=dark] .nav>.nav-item a {
+    color: #ffffff !important;
+}
+.logo-header {
+  padding-right: 0 !important;
+}
+/* Data Table */
+.dt-buttons {
+    width: 40%;
+    float: left;
+}
+ul li {
+    list-style-type: none !important;
+    }
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+.card-header > div {
+    padding-bottom: 15px;
+}
+.card-header > div > ul {
+    margin: 0;
+}
+.rotate-right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+.mt-5 {
+    margin-top: 1px !important;
+}
+.tab-content {
+    padding-top: 10px;
+    padding-left: 20px;
+}
+.card-header {
+    padding-bottom: 0 !important;
+}
+
+.bootstrap-datepicker-widget {
+    text-align: center;
+    padding-top: 10px !important;
+    width: 300px !important;
+    overflow: none;
+}
+
+.bootstrap-datetimepicker-widget {
+    text-align: center;
+    padding-top: 10px !important;
+    width: 300px !important;
+    overflow: none;
+}
+
+.object-tools {
+    margin-left: auto !important;
+}
+.object-tools > li {
+    display: inline-block;
+}
+
+.pl-15px {
+    padding-left: 15px;
+}
+
+.messagelist {
+    position: fixed;
+    top: 75px;
+    right: 15px;
+    width: 500px;
+    z-index: 1;
+}
+
+.messagelist > li {
+    padding: 15px 20px;
+    border-radius: 5px 5px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 600;
+    opacity: 0.9
+}
+
+.messagelist a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.message-close:hover {
+    cursor: pointer
+}
+
+.bg-success {
+    background-color: #3bc661 !important;
+}
+
+.daterangepicker {
+    z-index: 0 !important
+}
+.datepicker-input {
+    flex: none !important;
+    width: 150px !important;
+}
+.datetimepicker-input {
+    flex: none !important;
+    width: 200px !important;
+}
+
+.ajax > .dropdown-menu > .inner > .dropdown-menu.inner {
+    max-height: 400px !important;
+}
+
+.bg-error {
+    background-color:#dc3545!important
+}
+
+.errornote, .errorlist {
+    color: #ff0000;
+    margin: 0 0 0 20px;
+}
+
+.errorlist > li {
+    margin-left: 190px;
+}
+
+.overflow-y-scroll {
+    overflow-y: scroll !important;
+}
+
+.home-card {
+    height: 80vh !important;
+}
+
+#changelist .filters {
+  display: none;
+}
+.empty-form {
+    display: none;
+}
+#-empty {
+    display: initial !important;
+}
+.toplinks {
+    display: flex !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.toplinks > li {
+    margin-right: 10px;
+}
+#select-all {
+    display: none;
+}
+#select-all:hover {
+    cursor: pointer;
+}
+.select2-selection, .select2-dropdown {
+    border: 1px solid #ebedf2 !important;
+}
+.select2-container--admin-autocomplete .select2-results__option--highlighted[aria-selected] {
+    background: #1572E8 !important;
+}
+.select2-container .select2-selection--single, .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 35px !important;
+}
+.select2-container--open, .select2-dropdown  {
+    z-index: 1 !important;
+}
+.select2-dropdown .select2-results__option {
+  position: relative;
+  min-width: 0px;
+}

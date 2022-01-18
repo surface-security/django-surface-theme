@@ -1,0 +1,27 @@
+{% load admin_list surface_theme %}
+{% load i18n %}
+
+{% get_params as params %}
+
+<p class="paginator m-0 right">
+{% if pagination_required %}
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group ml-auto" role="group" aria-label="First group">
+            {% get_page_range cl.paginator cl.page_num 1 1 as page_range %}
+            {% for i in page_range %}
+                {% if cl.page_num == i %}
+                    <a href="?{{params}}p={{ i }}" class="btn btn-primary">{{ i }}</a>
+                {% else %}
+                    {% if i == paginator.ELLIPSIS %}
+                        <a href="?{{params}}p={{ paginator.ELLIPSIS }}" class="btn btn-primary-outline form-control">{{ paginator.ELLIPSIS }}</a>
+                    {% else %}
+                        <a href="?{{params}}p={{ i }}" class="btn btn-primary-outline form-control">{{ i }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+    </div>
+</div>
+{% endif %}
+<p class="text-right">
+    {{ cl.result_count }} {% if cl.result_count == 1 %}{{ cl.opts.verbose_name|capfirst }}{% else %}{{cl.opts.verbose_name_plural|capfirst }}{% endif %}
+</p>

@@ -1,0 +1,59 @@
+{% load surface_theme %}
+
+<fieldset>
+    {% for line in fieldset %}
+        <div class="form-row{% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
+            {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
+            {% for field in line %}
+                <div class="w-100{% if not line.fields|length_is:'1' %} fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}{% elif field.is_checkbox %} checkbox-row{% endif %}">
+                    {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
+                    {% if field.is_checkbox %}
+                        <div class="form-group form-inline">
+                            <label for="field-{{ field.field.name }}" class="col-md-2 col-form-label justify-content-start">{{ field.label_tag }}</label>
+                            <div class="col-md-10 p-0">
+                                {{ field.field|add_class:"form-control" }}
+                                {% if field.field.help_text %}
+                                <small class="form-text text-muted">{{ field.field.help_text|safe }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if field.is_readonly %}
+                          <div class="form-group form-inline">
+                              <label for="field-{{ field.field.name }}" class="col-md-2 col-form-label justify-content-start">{{ field.label_tag }}</label>
+                              <div class="col-md-10 p-0">
+                                  <div class="readonly">
+                                    {% with content=original|get_field_content:field %}
+                                        {% if content.type == 'urls' %}                                            
+                                            {% for url in content.field %}
+                                                <a href="{{ url.url }}">{{ url.obj }}</a>{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% elif content.type == 'json' %}
+                                            {{ content.field }}
+                                        {% elif content.type == 'field' %}
+                                            {{ content.field.contents }}
+                                        {% else %}
+                                            None
+                                        {% endif %}
+                                    {% endwith %}
+
+                                    </div>
+                              </div>
+                          </div>
+                        {% else %}
+                            <div class="form-group form-inline">
+                                <label for="field-{{ field.field.name }}" class="col-md-2 col-form-label justify-content-start">{{ field.label_tag }}</label>
+                                <div class="col-md-10 p-0">
+                                    {{ field.field|add_class:"form-control" }}
+                                    {% if field.field.help_text %}
+                                    <small class="form-text text-muted">{{ field.field.help_text|safe }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</fieldset>

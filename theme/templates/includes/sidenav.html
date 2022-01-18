@@ -1,0 +1,61 @@
+{% load i18n static surface_theme %}
+<!-- Sidebar -->
+<div class="sidebar sidebar-style-2" data-background-color="dark">
+	<div class="sidebar-wrapper scrollbar scrollbar-inner">
+		<div class="sidebar-content">
+			{% if user.is_authenticated %}
+				<ul class="nav nav-primary">
+					{% block side_menu_authenticated %}
+					<li class="nav-item {% if request.path == '/' %}active{% endif %}">
+						<a href="/">
+							<div><i class="fas fa-home mr-2"></i></div>
+							<p>Dashboard</p>
+						</a>
+					</li>
+					{% block side_menu_authenticated_extra %}
+					{% endblock side_menu_authenticated_extra %}
+					{% surface_menu as menu_list %}
+					{% for app in menu_list %}
+						{% if app|contains_true %}
+							<li class="nav-item {% for a in app.items %}{% if request.path == a.url %}submenu active{% endif %}{% endfor %}">
+								<a data-toggle="collapse" href="#surface-{{ app.app_label|strip }}">
+									<div><i class="{{ app.icon }} mr-2"></i></div>
+									<p>{{ app.label }}</p>
+									<span class="caret"></span>
+								</a>
+								{% if app.items %}
+								<div class="collapse {% for a in app.items %}{% if request.path == a.url %}show{% endif %}{% endfor %}" id="surface-{{ app.app_label|strip }}">
+									<ul class="nav nav-collapse">
+										{% for model in app.items %}
+											{% if model.has_perms %}
+												{% if not model.name and not model.url and model.permissions|length == 0 %}
+												<li class="font-weight-bold my-1 ml-2">
+													<span class="sub-item">
+														{% if model.label %}{{ model.label }}{% else %}{{ model.name }}{% endif %}
+													</span>
+												</li>
+												{% else %}
+												<li {% if request.path == model.url %}class="active"{% endif %}>
+													<a href="{{ model.url }}">
+														<span class="sub-item">
+															{% if model.label %}{{ model.label }}{% else %}{{ model.name }}{% endif %}
+														</span>
+													</a>
+												</li>
+												{% endif %}
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+								{% endif %}
+							</li>
+						{% endif %}
+					{% endfor %}
+					{% endblock side_menu_authenticated %}
+				</ul>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+<!-- End Sidebar -->

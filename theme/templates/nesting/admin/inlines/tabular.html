@@ -1,0 +1,142 @@
+{% load admin_urlname admin_urlquote from admin_urls %}
+{% load i18n nested_admin static surface_theme %}
+
+{% with inline_admin_formset.formset.is_nested as is_nested %}
+
+{% with inline_admin_formset.opts as inline_opts %}
+<div class="inline-group compact px-3 pt-3" id="{{ inline_admin_formset.formset.prefix }}-group" data-inline-prefix="{{ inline_admin_formset.formset.prefix }}" data-inline-verbose-name="{{ inline_admin_formset.opts.verbose_name|capfirst }}" data-inline-delete-text="{% trans "Remove" %}">
+    <h3>
+        {% if inline_admin_formset.opts.title %}{{ inline_admin_formset.opts.title }}{% else %}{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}{% endif %}
+    </h3>
+
+    {{ inline_admin_formset.formset.management_form }}
+    {{ inline_admin_formset.formset.non_form_errors }}
+
+    <table class="inline-related">
+      <thead>
+          <tr>
+              {% for field in inline_admin_formset.fields %}
+                  {% if not field.widget.is_hidden %}
+                      <th class="{{ field.label|lower|slugify }}{% if field.required %} required{% endif %}">{{ field.label|capfirst }}
+                      {% if field.help_text %}&nbsp;<img src="{% static "admin/img/icon-unknown.svg" %}" class="help help-tooltip" width="10" height="10" alt="({{ field.help_text|striptags }})" title="{{ field.help_text|striptags }}" />{% endif %}
+                      </th>
+                  {% endif %}
+              {% endfor %}
+              {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Delete?" %}</th>{% endif %}
+          </tr>
+      </thead>
+    {% with inline_admin_formset.opts.sortable_field_name|default:"" as sortable_field_name %}
+    {% for inline_admin_form in inline_admin_formset|formsetsort:sortable_field_name %}
+        <tbody class="{% if inline_admin_formset.opts.classes %} {{ inline_admin_formset.opts.classes|join:" " }}{% endif %}{% if inline_admin_form.original or inline_admin_form.show_url %} has_original{% endif %}{% if forloop.last and inline_admin_formset.has_add_permission %} empty-form{% endif %}{% if inline_admin_form.form.inlines %} {% endif %}"
+            data-inline-model="{{ inline_admin_form.model_admin.opts.app_label }}-{{ inline_admin_form.model_admin.opts.model_name }}"
+            {% if inline_admin_form.pk_field.field %}
+            data-is-initial="{% if inline_admin_form.pk_field.field.value %}true{% else %}false{% endif %}"
+            {% endif %}
+            id="{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% else %}{%if is_nested %}{% endif %}{{ inline_admin_form.form|form_index }}{% endif %}">
+
+        {% if inline_admin_form.form.non_field_errors %}
+        <tr><td colspan="{{ inline_admin_form|cell_count }}">
+            <ul class="errorlist">
+                <li>{{ inline_admin_form.form.non_field_errors }}</li>
+            </ul>
+        </td></tr>
+        {% endif %}
+        <tr class="{% if inline_admin_form.original or inline_admin_form.show_url %} has_original{% endif %}">
+            {% if inline_admin_form.original or inline_admin_form.show_url %}
+              <p>
+              {% if inline_admin_form.original %}
+                {{ inline_admin_form.original }}
+                {% if inline_admin_form.model_admin.show_change_link and inline_admin_form.model_admin.has_registered_model %}
+                  <a href="{% url inline_admin_form.model_admin.opts|admin_urlname:'change' inline_admin_form.original.pk|admin_urlquote %}" class="{% if inline_admin_formset.has_change_permission %}inlinechangelink{% else %}inlineviewlink{% endif %}">
+                    {% if inline_admin_formset.has_change_permission %}
+                      {% trans "Change" %}
+                    {% else %}
+                      {% trans "View" %}
+                    {% endif %}
+                  </a>
+                {% endif %}
+              {% endif %}
+              {% if inline_admin_form.show_url %}
+                  <a href="{{ inline_admin_form.absolute_url }}">{% trans "View on site" %}</a>
+              {% endif %}
+              </p>
+            {% endif %}
+            {% if inline_admin_formset.opts.sortable_field_name %}
+              <span></span>
+            {% endif %}
+            {% if inline_admin_form.needs_explicit_pk_field %}
+              {{ inline_admin_form.pk_field.field }}
+            {% endif %}
+            {% if inline_admin_form.fk_field %}
+              {{ inline_admin_form.fk_field.field }}
+            {% endif %}
+            {% spaceless %}
+            {% for fieldset in inline_admin_form %}
+                {% for line in fieldset %}
+                    {% for field in line %}
+                        {% if field.field.is_hidden %} {{ field.field }} {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+            {% endspaceless %}
+            </td>
+
+            {% for fieldset in inline_admin_form %}
+                {% for line in fieldset %}
+                    {% for field in line %}
+                        {% if not field.field.is_hidden %}
+                            <td class="field-{{ field.field.name }} py-1">
+                                {% if field.is_readonly %}
+                                    <p>{{ field.contents }}</p>
+                                {% else %}
+                                    {% if field.field.errors %}
+                                      {{ field.field.errors.as_ul }}
+                                    {% endif %}
+                                    {{ field.field|add_class:"form-control" }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+            {% if inline_admin_formset.formset.can_delete %}
+                {% if inline_admin_form.original %}
+                <td class="delete {{ inline_admin_formset.handler_classes|join:" " }}">{{ inline_admin_form.deletion_field.field }}</td>
+                {% else %}
+                <td class="delete">
+                    <div>
+                      <a href="#"><span class="badge badge-pill badge-danger font-weight-bold">{% blocktrans with verbose_name=inline_admin_formset.opts.verbose_name|capfirst %}Remove{% endblocktrans %}</span></a>
+                    </div>
+                </td>
+                {% endif %}
+            {% endif %}
+
+        </tr>
+
+        {% if inline_admin_form.form.inlines %}
+            <tr><td colspan="{{ inline_admin_form|cell_count }}">
+            {% for nested in inline_admin_form.form.inlines %}
+                {% include nested.opts.template with inline_admin_formset=nested %}
+            {% endfor %}
+            </td></tr>
+        {% endif %}
+
+        </tbody>
+    {% if forloop.last and inline_admin_formset.has_add_permission %}
+        <tbody>
+            <tr>
+                <td>
+                    <div class="add-subrow d-inline-block my-2">
+                        <a href="javascript://"><span class="badge badge-pill badge-warning font-weight-bold"><i class="fas fa-plus"></i> {% blocktrans with verbose_name=inline_admin_formset.opts.verbose_name|capfirst %}Add another {{ verbose_name }}{% endblocktrans %}</span></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    {% endif %}
+    {% endfor %}
+    {% endwith %}
+    </table>
+</div>
+{% endwith %}{# ends with inline_admin_formset.opts as inline_opts #}
+
+{% endwith %}{# ends {% with inline_admin_formset.formset.is_nested as is_nested %} #}

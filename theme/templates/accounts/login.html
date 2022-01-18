@@ -1,0 +1,77 @@
+{% extends "admin/login.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>Login</span>
+                        </div>
+                    </div>
+                    <br />
+
+          					{% if msg %}
+          						<ul class="messagelist p-0">
+          								<li class="bg-warning">
+          									<div class="row">
+          										<div class="col-11">
+          											{{ msg|capfirst }}
+          										</div>
+          										<div class="col-1">
+          											<i class="fas fa-times message-close"></i>
+          										</div>
+          									</div>
+          								</li>
+          						</ul>
+          					{% endif %}
+
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-user"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-lock"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.password }}
+                                        </div>
+                                    </div>
+
+                                    <p class="ml-3">Use default your AD Credentials.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            &nbsp; &nbsp;
+                            <span>Not a member?</span> Request Access via usual corporate requests.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

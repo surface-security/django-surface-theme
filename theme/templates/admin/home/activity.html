@@ -1,0 +1,20 @@
+{% load log %}
+
+<div class="col-md-4 home-card">
+    <div class="card mh-100 overflow-y-scroll">
+    <div class="card-header">
+      <div class="card-title">Recent Activity</div>
+    </div>
+    <div class="card-body">
+      <h5>Your Activity - Last 10</h5>
+      {% get_admin_log 10 as admin_log for_user user %}
+      {% include 'admin/home/activity_list.html' %}
+
+      {% if request.user.is_superuser %}
+        <h5>All Users Activity</h5>
+        {% get_admin_log 50 as admin_log %}
+        {% include 'admin/home/activity_list.html' %}
+      {% endif %}
+    </div>
+  </div>
+</div>

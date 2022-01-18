@@ -1,0 +1,32 @@
+{% load surface_theme %}
+
+<div class="col-md-4 home-card">
+    <div class="card mh-100 overflow-y-scroll">
+        <div class="card-header">
+        <div class="card-title">Useful Links</div>
+        </div>
+        <div class="card-body pb-0">
+            {% surface_get_links as surface_get_links_list %}
+            {% if surface_get_links_list %}
+                {% for link in surface_get_links_list %}
+                  <div class="row d-flex">
+                      <div class="flex-1 pt-1 ml-2">
+                          <h5 class="fw-bold mb-1">{{ link.label }}</h5>
+                      </div>
+                      <div class="container">
+                      {% for item in link.items %}
+                          <div class="row">
+                            <div class="col-sm">
+                              <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.name }}</a>
+                            </div>
+                          </div>
+                      {% endfor %}
+                      </div>
+                  </div>
+                  <div class="separator-dashed"></div>
+                {% endfor %}
+            {% endif %}
+        <div class="separator-dashed"></div>
+        </div>
+    </div>
+</div>
