@@ -43,3 +43,4 @@ docker/requirements_full.txt
 /node_modules/
 /package-lock.json
 /package.json
+.tox
