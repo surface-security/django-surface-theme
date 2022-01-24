@@ -14,8 +14,6 @@ from jsoneditor.forms import JSONEditor
 
 
 class DefaultAdminListMixin:
-    tab = 0
-
     formfield_overrides = {models.JSONField: {'widget': JSONEditor}}
     
     class Media(JSONEditor.Media):
@@ -71,19 +69,15 @@ class DefaultAdminListMixin:
         reverse_objects = self.get_related_objects([obj])
         return format_html(f'<div>{self.render_reverse_objects(reverse_objects)}</div>')
 
-    def render_reverse_objects(self, reverse_objects, html_result=''):
-        for reverse_object in reverse_objects: 
+    def render_reverse_objects(self, reverse_objects, tab=0):
+        html_result = ''
+        for reverse_object in reverse_objects:
             if not isinstance(reverse_object, list):
-                html_result += f'<p class="m-0">{self.tab*"&emsp;"}{reverse_object}</p>'              
+                html_result += f'<p class="m-0">{tab*"&emsp;"}{reverse_object}</p>'
             else:
-                self.tab += 1
-                html_result += self.render_reverse_objects(reverse_object) 
-
-        if self.tab > 0:
-            self.tab -= 1
-
+                html_result += self.render_reverse_objects(reverse_object, tab=tab+1)
         return html_result
-        
+
     def get_related_objects(self, objs):
         """
         This method is based on ``get_delete_objects`` where all objects related to ``objs`` 
@@ -102,13 +96,17 @@ class DefaultAdminListMixin:
         collector.collect(objs)
         
         def format_callback(obj):
-            model = obj.__class__
             opts = obj._meta
             no_edit_link = f'{capfirst(opts.verbose_name)}: {obj}'
 
             try:
-                admin_url = reverse(f'admin:{opts.app_label}_{opts.model_name}_change',
-                                    None, (admin.utils.quote(obj.pk),))
+                admin_url = reverse(
+                    f'admin:{opts.app_label}_{opts.model_name}_change',
+                    None,
+                    (admin.utils.quote(obj.pk),)
+                )
+                # Display a link to the admin page.
+                return format_html(f'{capfirst(opts.verbose_name)}: <a href="{admin_url}">{obj}</a>')
             except NoReverseMatch:
                 # If Change url doesn't exists
                 fields = opts.fields
@@ -116,16 +114,21 @@ class DefaultAdminListMixin:
                 # Extract the objects from a relationship
                 if fields[1].__class__ is models.ForeignKey and fields[2].__class__ is models.ForeignKey:                
                     related_objects = [getattr(obj, fields[1].name), getattr(obj, fields[2].name)]
-                    admin_urls = [reverse(f'admin:{related_objects[i]._meta.app_label}_{related_objects[i]._meta.model_name}_change',
-                                        None, (admin.utils.quote(related_objects[i].pk),)) for i in range(0,2)]
-                    no_edit_link = f'{capfirst(opts.verbose_name)}: {capfirst(fields[1].name)} <a href="{admin_urls[0]}">{related_objects[0]}</a> - {capfirst(fields[2].name)} <a href="{admin_urls[1]}">{related_objects[1]}</a>'
+                    admin_urls = []
+                    for i in range(2):
+                        try:
+                            url = reverse(
+                                f'admin:{related_objects[i]._meta.app_label}_{related_objects[i]._meta.model_name}_change',
+                                None,
+                                (admin.utils.quote(related_objects[i].pk),)
+                            )
+                            admin_urls.append(f'<a href="{url}">{related_objects[i]}</a>')
+                        except NoReverseMatch:
+                            # maybe no adminmodel for this model? list without link
+                            admin_urls.append(related_objects[i])
+                    no_edit_link = f'{capfirst(opts.verbose_name)}: {capfirst(fields[1].name)} {admin_urls[0]} - {capfirst(fields[2].name)} {admin_urls[1]}'
 
                 return no_edit_link
-
-            # Display a link to the admin page.
-            return format_html(f'{capfirst(opts.verbose_name)}: <a href="{admin_url}">{obj}</a>')
-
-            # model_count = {model._meta.verbose_name_plural: len(objs) for model, objs in collector.model_objs.items()}
 
         return collector.nested(format_callback)
 
