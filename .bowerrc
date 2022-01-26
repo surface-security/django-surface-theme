@@ -1,0 +1,6 @@
+{
+    "directory": "theme/static/components",
+    "resolvers": [
+        "bower-art-resolver"
+    ]
+}
