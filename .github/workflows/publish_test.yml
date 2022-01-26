@@ -5,7 +5,7 @@ name: publish test
 
 on:
   push:
-    branches: testpypi
+    branches: testpypi*
 
 jobs:
   deploy:
@@ -20,6 +20,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
+    - name: Install bower
+      run: npm install bower bower-art-resolver
+    - name: Compile assets
+      run: ./node_modules/bower/bin/bower install
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__
