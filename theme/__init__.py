@@ -1,3 +1,3 @@
-__version__ = '0.0.3p1'
+__version__ = '0.0.3.p1'
 
 default_app_config = 'theme.apps.SurfaceThemeConfig'
