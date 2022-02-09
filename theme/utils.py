@@ -261,7 +261,7 @@ def get_menu_item_url(url, original_app_list):
 
 def get_menu_items(context):
     original_app_list = OrderedDict(map(lambda app: (app['app_label'], app), get_original_menu_items(context)))
-    custom_app_list = settings.SURFACE_MENU_ITEMS
+    custom_app_list = getattr(settings, 'SURFACE_MENU_ITEMS', None)
 
     if custom_app_list not in (None, False):
         if isinstance(custom_app_list, dict):

@@ -107,7 +107,7 @@ def increment(value):
 
 @register.simple_tag(takes_context=True)
 def surface_get_links(context):
-    return settings.SURFACE_LINKS_ITEMS
+    return getattr(settings, 'SURFACE_LINKS_ITEMS', None)
 
 
 @register.simple_tag(takes_context=True)
