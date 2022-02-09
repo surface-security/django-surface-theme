@@ -24,14 +24,6 @@ def get_page_range(p, number, on_each_side=3, on_ends=2):
     return paginator.get_elided_page_range(number=number, on_each_side=on_each_side, on_ends=on_ends)
 
 
-@register.simple_tag
-def get_title(version=True):
-    if settings.TITLE:
-        return f'{settings.TITLE} {settings.VERSION}' if version else settings.TITLE
-    
-    return 'Surface Security'
-
-
 # Helpful with templates to see what's in an object
 @register.filter
 def get_field_content(obj, field):

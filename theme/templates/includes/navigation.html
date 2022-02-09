@@ -5,7 +5,9 @@
 		<a href="/" class="logo">
 				<div class="d-flex align-items-center h-100">
 					<img src="/static/assets/logo.png" alt="navbar brand" class="navbar-brand">
-					<h4 class="d-inline-block text-white ml-2 mb-0 font-weight-bold">{% get_title %}</h4>
+					<h4 class="d-inline-block text-white ml-2 mb-0 font-weight-bold">
+						{% block sidebar-title %}{{ site_title|default:_('Django site admin') }}{% endblock %}
+					</h4>
 				</div>
 		</a>
 		<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
