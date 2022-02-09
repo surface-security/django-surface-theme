@@ -2,7 +2,10 @@ from setuptools import setup
 
 
 def get_install_requires():
-    install_requires = ['Django']
+    install_requires = [
+        'Django>=3,<4',
+        'django-jsoneditor>0.1,<0.2',
+    ]
 
     try:
         import importlib

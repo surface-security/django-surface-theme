@@ -4,6 +4,8 @@ Surface theme is built on top of [Django Dashboard Atlantis Dark](https://appsee
 
 ## ToDo
 
+`testapp` is a demo app of the theme to cover all customizations and test them. TODO [visual testing](https://github.com/python-needle/needle)?
+
 Package currently needs serious review:
 
 * TESTS!
