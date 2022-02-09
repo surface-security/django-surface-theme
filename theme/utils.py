@@ -21,11 +21,15 @@ class DefaultAdminListMixin:
         js = JSONEditor.Media.js + ('django-jsoneditor/django-jsoneditor-readonly.js',)
 
     def get_list_display(self, request):
-        default_list_display = super(DefaultAdminListMixin, self).get_list_display(request)
+        """
+        make sure model primary key is always present as first column for standard UX
+        """
+        default_list_display = list(super(DefaultAdminListMixin, self).get_list_display(request))
 
-        if 'pk' in default_list_display:
-            default_list_display.remove('pk')
-        default_list_display.insert(0, 'pk')
+        pk = self.model._meta.pk.name
+        if pk in default_list_display:
+            default_list_display.remove(pk)
+        default_list_display.insert(0, self.model._meta.pk.name)
 
         return default_list_display
 
