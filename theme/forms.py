@@ -12,6 +12,7 @@ from .utils import user_is_authenticated, get_model_instance_label
 
 try:
     from django.apps import apps
+
     get_model = apps.get_model
 except ImportError:
     from django.db.models.loading import get_model
@@ -62,7 +63,6 @@ class ModelLookupForm(forms.Form):
         content_type = ContentType.objects.get_for_model(self.model_cls)
         permission = Permission.objects.filter(content_type=content_type, codename__startswith='view_').first()
 
-
         if not self.request.user.has_perm(f"{data['app_label']}.{permission.codename}"):
             raise ValidationError('error')
 
@@ -83,10 +83,12 @@ class ModelLookupForm(forms.Form):
         page = self.cleaned_data['page'] or 1
         offset = (page - 1) * limit
 
-        items = list(map(
-            lambda instance: {'id': instance.pk, 'text': get_model_instance_label(instance)},
-            qs.all()[offset:offset + limit]
-        ))
+        items = list(
+            map(
+                lambda instance: {'id': instance.pk, 'text': get_model_instance_label(instance)},
+                qs.all()[offset : offset + limit],
+            )
+        )
         total = qs.count()
 
         return items, total

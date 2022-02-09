@@ -16,17 +16,13 @@ class DatePickerInput(forms.DateInput):
         context = super().get_context(name, value, attrs)
         context['widget'][f'{self.prefix}_id'] = picker_id
         return context
-    
+
     @property
     def media(self):
         extra = '' if settings.DEBUG else '.min'
         return forms.Media(
-            css = {
-                'all': ('components/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css',)
-            },
-            js=(
-                'components/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js',
-            )
+            css={'all': ('components/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css',)},
+            js=('components/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js',),
         )
 
 

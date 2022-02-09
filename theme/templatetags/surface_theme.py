@@ -31,50 +31,40 @@ def get_field_content(obj, field):
 
     try:
         obj_field = obj._meta.get_field(field_name)
-        
+
         if obj_field.__class__ is models.JSONField:
             return {
                 'type': 'json',
-                'field': JSONEditor().render(field_name, getattr(obj, field_name) or [], attrs={'id': f'id_{field_name}'})
+                'field': JSONEditor().render(
+                    field_name, getattr(obj, field_name) or [], attrs={'id': f'id_{field_name}'}
+                ),
             }
 
         elif isinstance(obj_field, models.ForeignKey):
             obj_from_field = getattr(obj, field_name)
-            
+
             if obj_from_field:
-                url = reverse(f'admin:{obj_from_field._meta.app_label}_{obj_from_field._meta.model_name}_change',  args=[obj_from_field.pk])
-                return {
-                    'type': 'urls',
-                    'field': [{'url': url, 'obj': obj_from_field}]
-                }
+                url = reverse(
+                    f'admin:{obj_from_field._meta.app_label}_{obj_from_field._meta.model_name}_change',
+                    args=[obj_from_field.pk],
+                )
+                return {'type': 'urls', 'field': [{'url': url, 'obj': obj_from_field}]}
 
         elif isinstance(obj_field, models.ManyToManyField):
             objects = getattr(obj, field_name)
 
             urls = []
             for obj in objects.all():
-                url = reverse(f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change',  args=[obj.pk])
-                urls.append({
-                    'url': url,
-                    'obj': obj
-                })
+                url = reverse(f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change', args=[obj.pk])
+                urls.append({'url': url, 'obj': obj})
 
-            return {
-                'type': 'urls',
-                'field': urls
-            }
+            return {'type': 'urls', 'field': urls}
 
         else:
-            return {
-                'type': 'field',
-                'field': field
-            }
-            
+            return {'type': 'field', 'field': field}
+
     except:
-        return {
-            'type': 'field',
-            'field': field
-        }
+        return {'type': 'field', 'field': field}
 
 
 @register.filter
@@ -129,6 +119,7 @@ def contains_true(app):
         if item['has_perms'] == True:
             return 1
     return 0
+
 
 @register.simple_tag
 def surface_stats(period):

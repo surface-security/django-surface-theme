@@ -15,7 +15,7 @@ from jsoneditor.forms import JSONEditor
 
 class DefaultAdminListMixin:
     formfield_overrides = {models.JSONField: {'widget': JSONEditor}}
-    
+
     class Media(JSONEditor.Media):
         # FIXME: fork jsoneditor and support this in a cleaner way...
         js = JSONEditor.Media.js + ('django-jsoneditor/django-jsoneditor-readonly.js',)
@@ -25,16 +25,16 @@ class DefaultAdminListMixin:
 
         if 'pk' in default_list_display:
             default_list_display.remove('pk')
-        default_list_display.insert(0, 'pk') 
+        default_list_display.insert(0, 'pk')
 
         return default_list_display
 
     def get_list_display_links(self, request, list_display):
         default_list_display_links = super(DefaultAdminListMixin, self).get_list_display_links(request, list_display)
-    
+
         if not default_list_display_links:
             default_list_display_links = ('pk',)
-        
+
         return default_list_display_links
 
     def get_readonly_fields(self, request, obj=None):
@@ -52,19 +52,18 @@ class DefaultAdminListMixin:
             return fieldsets
 
         default_fieldset_fields = fieldsets[0][1]['fields']
-        if 'reverse' in default_fieldset_fields: default_fieldset_fields.remove('reverse')
+        if 'reverse' in default_fieldset_fields:
+            default_fieldset_fields.remove('reverse')
 
         fieldsets_to_add = (
             (
                 'Relationships',
-                {
-                    'fields': ('reverse',)
-                },
+                {'fields': ('reverse',)},
             ),
         )
         # keep the same type whatever it is
         return fieldsets + type(fieldsets)(fieldsets_to_add)
-            
+
     def reverse(self, obj):
         reverse_objects = self.get_related_objects([obj])
         return format_html(f'<div>{self.render_reverse_objects(reverse_objects)}</div>')
@@ -75,14 +74,14 @@ class DefaultAdminListMixin:
             if not isinstance(reverse_object, list):
                 html_result += f'<p class="m-0">{tab*"&emsp;"}{reverse_object}</p>'
             else:
-                html_result += self.render_reverse_objects(reverse_object, tab=tab+1)
+                html_result += self.render_reverse_objects(reverse_object, tab=tab + 1)
         return html_result
 
     def get_related_objects(self, objs):
         """
-        This method is based on ``get_delete_objects`` where all objects related to ``objs`` 
-        are returned for deletion. Unlike ``get_delete_objects``, this method should return 
-        not only the related objects for deletion but all related objects to ``objs``.        
+        This method is based on ``get_delete_objects`` where all objects related to ``objs``
+        are returned for deletion. Unlike ``get_delete_objects``, this method should return
+        not only the related objects for deletion but all related objects to ``objs``.
         """
 
         try:
@@ -94,16 +93,14 @@ class DefaultAdminListMixin:
 
         collector = admin.utils.NestedObjects(using=using)
         collector.collect(objs)
-        
+
         def format_callback(obj):
             opts = obj._meta
             no_edit_link = f'{capfirst(opts.verbose_name)}: {obj}'
 
             try:
                 admin_url = reverse(
-                    f'admin:{opts.app_label}_{opts.model_name}_change',
-                    None,
-                    (admin.utils.quote(obj.pk),)
+                    f'admin:{opts.app_label}_{opts.model_name}_change', None, (admin.utils.quote(obj.pk),)
                 )
                 # Display a link to the admin page.
                 return format_html(f'{capfirst(opts.verbose_name)}: <a href="{admin_url}">{obj}</a>')
@@ -112,7 +109,7 @@ class DefaultAdminListMixin:
                 fields = opts.fields
 
                 # Extract the objects from a relationship
-                if fields[1].__class__ is models.ForeignKey and fields[2].__class__ is models.ForeignKey:                
+                if fields[1].__class__ is models.ForeignKey and fields[2].__class__ is models.ForeignKey:
                     related_objects = [getattr(obj, fields[1].name), getattr(obj, fields[2].name)]
                     admin_urls = []
                     for i in range(2):
@@ -120,7 +117,7 @@ class DefaultAdminListMixin:
                             url = reverse(
                                 f'admin:{related_objects[i]._meta.app_label}_{related_objects[i]._meta.model_name}_change',
                                 None,
-                                (admin.utils.quote(related_objects[i].pk),)
+                                (admin.utils.quote(related_objects[i].pk),),
                             )
                             admin_urls.append(f'<a href="{url}">{related_objects[i]}</a>')
                         except NoReverseMatch:
@@ -132,7 +129,7 @@ class DefaultAdminListMixin:
 
         return collector.nested(format_callback)
 
-        
+
 def get_app_list(context, order=True):
     admin_site = get_admin_site(context)
     request = context['request']
@@ -154,7 +151,7 @@ def get_app_list(context, order=True):
                     'object_name': model._meta.object_name,
                     'perms': perms,
                     'model_name': model._meta.model_name,
-                    'admin_url': reverse(f'admin:{app_label}_{model._meta.model_name}_changelist')
+                    'admin_url': reverse(f'admin:{app_label}_{model._meta.model_name}_changelist'),
                 }
 
                 if perms.get('view', False) or perms.get('change', False):
@@ -178,7 +175,9 @@ def get_app_list(context, order=True):
                         'name': name,
                         'app_label': app_label,
                         'app_url': reverse(
-                            'admin:app_list', kwargs={'app_label': app_label}, current_app=admin_site.name,
+                            'admin:app_list',
+                            kwargs={'app_label': app_label},
+                            current_app=admin_site.name,
                         ),
                         'has_module_perms': has_module_perms,
                         'models': [model_dict],
