@@ -14,9 +14,9 @@ style_check:
 		  theme testapp setup.py
 
 test:
-	testapp/manage.py test $${TEST_ARGS:-tests}
+	testapp/manage.py test $${TEST_ARGS:-testapp}
 
 coverage:
 	PYTHONPATH="testapp" \
-		python -b -W always -m coverage run testapp/manage.py test $${TEST_ARGS:-tests}
+		python -b -W always -m coverage run testapp/manage.py test $${TEST_ARGS:-testapp}
 	coverage report
