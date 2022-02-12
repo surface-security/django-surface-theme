@@ -20,3 +20,5 @@ urlpatterns = [
     path('', include(('theme.urls', 'theme'), namespace='surface_theme')),
     path('admin/', admin.site.urls),
 ]
+
+admin.site.site_title = "Surface Security"
