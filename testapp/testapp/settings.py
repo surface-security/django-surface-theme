@@ -121,3 +121,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SURFACE_MENU_ITEMS = [
+    {'label': ('Organisation'), 'icon': 'fas fa-building', 'items':[
+        {'name': 'auth.user'}
+    ]},
+    {'label': ('Organisation'), 'app_label': 'auth', 'icon': 'fas fa-building', 'items':[
+        {'name': 'user', 'label': 'Custom Label'},
+        {'url': 'https://example.com', 'url_blank': True, 'label': 'Custom URL'}
+    ]},
+]
+
+SURFACE_LINKS_ITEMS = [
+    {'label': ('Examples'), 'items':[
+        {'url': 'https://example.com', 'url_blank': True, 'name': 'Example.com'}
+    ]}
+]
