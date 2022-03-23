@@ -6,6 +6,7 @@ from . import widgets
 
 class SurfaceThemeConfig(AppConfig):
     name = 'theme'
+    default_auto_field = 'django.db.models.AutoField'
 
 
 # cleanest way found to override FORMFIELDs used by admin.ModelAdmin
