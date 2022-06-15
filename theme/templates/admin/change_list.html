@@ -54,6 +54,8 @@
                         <div>{{ cl.formset.management_form }}</div>
                         {% endif %}
 
+                        {% if cl.formset and cl.result_count %}<input type="submit" name="_save" class="default btn btn-info pull-right" value="{% translate 'Save' %}">{% endif %}
+
                         {% block result_list %}
                           {% result_list cl %}
                         {% endblock %}
