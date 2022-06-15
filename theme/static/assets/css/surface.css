@@ -2,9 +2,6 @@ html, body, .wrapper {
     height: 100%;
 }
 
-.main-header {
-  z-index: 2;
-}
 #search-nav {
     max-width: 60% !important;
     width: 60% !important;
