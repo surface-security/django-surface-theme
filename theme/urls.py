@@ -1,7 +1,6 @@
 import django
 from django.contrib.auth.views import LogoutView
-from django.conf.urls import url
-from django.urls import path, re_path, include
+from django.urls import path, re_path
 from . import views
 
 
@@ -19,7 +18,7 @@ urlpatterns = [
     path('register/', views.register_user, name="register"),
     path('logout/', LogoutView.as_view(), name="logout"),
     # Model Lookup
-    url(r'^model_lookup/$', views.model_lookup_view, name='model_lookup'),
+    re_path(r'^model_lookup/$', views.model_lookup_view, name='model_lookup'),
     # Testing Pages
     path("test-404/", custom_page_not_found),
     path("test-500/", custom_server_error),

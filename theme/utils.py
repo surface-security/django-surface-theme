@@ -6,9 +6,9 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.db import models, router
 from django.utils.html import format_html
 from django.urls import reverse, resolve, NoReverseMatch
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.utils.text import capfirst, slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from jsoneditor.forms import JSONEditor
 
@@ -212,7 +212,7 @@ def get_admin_site(context):
 def get_model_instance_label(instance):
     if getattr(instance, "related_label", None):
         return instance.related_label()
-    return smart_text(instance)
+    return smart_str(instance)
 
 
 def get_original_menu_items(context):
