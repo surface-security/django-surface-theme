@@ -24,10 +24,10 @@ jobs:
       run : tox -e style
 
   test:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-20.04 # pin due to https://github.com/actions/setup-python/issues/544
     strategy:
       matrix:
-        python-version: [3.9, 3.11] # drop for 3.6 due to https://github.com/actions/setup-python/issues/544
+        python-version: [3.6, 3.9, 3.11] 
 
     steps:
     - uses: actions/checkout@v2
