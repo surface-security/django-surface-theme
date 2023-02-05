@@ -305,6 +305,8 @@ def get_menu_items(context):
             if 'icon' in data:
                 item['icon'] = item.get('icon', 'fas fa-layer-group')
 
+            if not item['has_perms']:
+                return None
             return item
 
         def get_menu_item_app(data):
@@ -320,24 +322,31 @@ def get_menu_items(context):
             else:
                 item = {'app_label': app_label, 'has_perms': True}
 
+            if 'permissions' in data:
+                item['has_perms'] = item.get('has_perms', True) and context['user'].has_perms(data['permissions'])
+                if not item['has_perms']:
+                    return None
+
             item['label'] = data.get('label', '')
             item['url_blank'] = data.get('url_blank', '')
             item['icon'] = data.get('icon', 'fas fa-layer-group')
 
             if 'items' in data:
-                item['items'] = list(map(lambda x: get_menu_item_app_model(app_label, x), data['items']))
+                item['items'] = [
+                    get_menu_item_app_model(app_label, x)
+                    for x in data['items']
+                    if get_menu_item_app_model(app_label, x) is not None
+                ]
 
             if 'url' in data:
                 item['url'] = get_menu_item_url(data['url'], original_app_list)
-
-            if 'permissions' in data:
-                item['has_perms'] = item.get('has_perms', True) and context['user'].has_perms(data['permissions'])
 
             return item
 
         for data in custom_app_list:
             item = get_menu_item_app(data)
-            app_list.append(item)
+            if item is not None:
+                app_list.append(item)
 
     else:
 
