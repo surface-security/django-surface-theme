@@ -327,7 +327,8 @@ def get_menu_items(context):
                 if not item['has_perms']:
                     return None
 
-            item['label'] = data.get('label', '')
+            # use label from settings if there is one, otherwise re-use the one from app (if match), otherwise empty.
+            item['label'] = data.get('label', item.get('label', ''))
             item['url_blank'] = data.get('url_blank', '')
             item['icon'] = data.get('icon', 'fas fa-layer-group')
 
@@ -337,6 +338,9 @@ def get_menu_items(context):
                     for x in data['items']
                     if get_menu_item_app_model(app_label, x) is not None
                 ]
+            elif 'models' in item:
+                # fallback to all models if this menu item matches an app_label
+                item['items'] = item['models']
 
             if 'url' in data:
                 item['url'] = get_menu_item_url(data['url'], original_app_list)
