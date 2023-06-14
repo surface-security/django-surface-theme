@@ -2,6 +2,8 @@
 
 Surface theme is built on top of [Django Dashboard Atlantis Dark](https://appseed.us/admin-dashboards/django-dashboard-atlantis-dark).
 
+[![PyPI version](https://badge.fury.io/py/django-surface-theme.svg)](https://badge.fury.io/py/django-surface-theme)
+
 ## Surface Theme variables
 
 Define custom title in `urls.py`:
