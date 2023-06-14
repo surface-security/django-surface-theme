@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -21,7 +22,7 @@ def login_view(request):
                 login(request, user)
                 # same as https://github.com/django/django/blob/ca9872905559026af82000e46cde6f7dedc897b6/django/contrib/auth/views.py#L69
                 # TODO: ditch all login customization and just overload admin templates -> easier maintenance
-                redirect_to = request.POST.get(REDIRECT_FIELD_NAME) or request.GET.get(REDIRECT_FIELD_NAME, '')
+                redirect_to = request.POST.get(REDIRECT_FIELD_NAME) or request.GET.get(REDIRECT_FIELD_NAME, "")
                 url_is_safe = url_has_allowed_host_and_scheme(
                     url=redirect_to,
                     allowed_hosts=request.get_host(),
@@ -30,13 +31,13 @@ def login_view(request):
                 if url_is_safe:
                     return redirect(redirect_to)
                 else:
-                    return redirect('/')
+                    return redirect("/")
             else:
-                msg = 'Invalid credentials'
+                msg = "Invalid credentials"
         else:
-            msg = 'Error validating the form'
+            msg = "Error validating the form"
 
-    return render(request, "accounts/login.html", {"form": form, "msg": msg})
+    return render(request, "accounts/login.html", {"form": form, "msg": msg, "site_title": admin.site.site_title})
 
 
 def register_user(request):
@@ -49,15 +50,15 @@ def register_user(request):
             form.save()
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
+            authenticate(username=username, password=raw_password)
 
-            msg = 'User created.'
+            msg = "User created."
             success = True
 
             # return redirect("/login/")
 
         else:
-            msg = 'Form is not valid'
+            msg = "Form is not valid"
     else:
         form = SignUpForm()
 
@@ -67,15 +68,15 @@ def register_user(request):
 @login_required
 def model_lookup_view(request):
     if request.GET:
-        result = {'error': False}
+        result = {"error": False}
 
         form = ModelLookupForm(request, request.GET)
 
         if form.is_valid():
             items, total = form.lookup()
-            result['items'] = items
-            result['total'] = total
+            result["items"] = items
+            result["total"] = total
         else:
-            result['error'] = True
+            result["error"] = True
 
         return JsonResponse(result)
