@@ -195,3 +195,6 @@ ul li {
   position: relative;
   min-width: 0px;
 }
+input[type=text].form-control {
+  width: 50%;
+}
