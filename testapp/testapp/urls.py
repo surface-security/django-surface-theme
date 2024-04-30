@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include(('theme.urls', 'theme'), namespace='surface_theme')),
-    path('admin/', admin.site.urls),
+    path("", include(("theme.urls", "theme"), namespace="surface_theme")),
+    path("admin/", admin.site.urls),
 ]
 
 admin.site.site_title = "Surface Security"
