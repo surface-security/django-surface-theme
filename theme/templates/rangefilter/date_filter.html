@@ -44,6 +44,9 @@
           });
           dt_input.find('input').addClass("form-control");
           dt_input.css("height", "46px");
+          dt_input.find('input').css("width", "unset");
+          dt_input.find('input').parent().css("height", "100%");
+          dt_input.find('.input-group-append').css("height", "100%");
       });
     });
 

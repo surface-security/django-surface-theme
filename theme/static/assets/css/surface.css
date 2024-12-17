@@ -195,6 +195,7 @@ ul li {
   position: relative;
   min-width: 0px;
 }
-input[type=text].form-control {
-  width: 50%;
+
+input[type=text].form-control:not(#searchbar) {
+    width: 50%;
 }
