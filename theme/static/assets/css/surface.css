@@ -195,6 +195,16 @@ ul li {
   position: relative;
   min-width: 0px;
 }
+
 input[type=text].form-control {
-  width: 50%;
+    width: 50%;
+}
+
+.vDateField.form-control {
+    line-height: unset !important;
+}
+
+div.input-group-text.calendar-box {
+    max-height: 74% !important;
+    margin-left: -0.5rem;
 }
