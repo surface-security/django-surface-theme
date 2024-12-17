@@ -196,8 +196,6 @@ ul li {
   min-width: 0px;
 }
 
-input[type=text].form-control {
+input[type=text].form-control:not(#searchbar) {
     width: 50%;
 }
-
-
