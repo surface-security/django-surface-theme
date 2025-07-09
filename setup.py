@@ -3,7 +3,7 @@ from setuptools import setup
 
 def get_install_requires():
     install_requires = [
-        "Django>=3,<6.0",
+        "Django>=3,<6",
         "django-jsoneditor>0.1,<=0.2",
     ]
 
