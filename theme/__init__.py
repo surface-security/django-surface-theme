@@ -1,4 +1,4 @@
-__version__ = "0.0.14"
+__version__ = "0.0.15"
 
 # set default_app_config when using django earlier than 3.2
 try:
