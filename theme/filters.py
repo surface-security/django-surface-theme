@@ -37,7 +37,9 @@ class RelatedFieldAjaxListFilter(RelatedFieldListFilter):
         if self.lookup_val is None:
             return []
 
-        if isinstance(self.lookup_val, list):  # Django 5.0: filter values from query parameters can be passed as lists
+        if isinstance(
+            self.lookup_val, list
+        ):  # Django 5.0: filter values from query parameters can be passed as lists
             self.lookup_val = self.lookup_val[0]
 
         other_model = get_model_from_relation(field)
