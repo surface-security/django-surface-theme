@@ -33,17 +33,16 @@ class RelatedFieldAjaxListFilter(RelatedFieldListFilter):
         if self.lookup_val is None:
             return []
 
-        lookup_val = self.lookup_val
-        if isinstance(lookup_val, list):
-            lookup_val = lookup_val[0]
-
+        if isinstance(self.lookup_val, list): # Django 5.0: xyz
+            self.lookup_val = self.lookup_val[0]
+        
         other_model = get_model_from_relation(field)
         if hasattr(field, 'rel'):
             rel_name = field.rel.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
 
-        queryset = model._default_manager.filter(**{rel_name: lookup_val}).all()
+        queryset = model._default_manager.filter(**{rel_name: self.lookup_val}).all()
         return [(x._get_pk_val(), smart_str(x)) for x in queryset]
 
 
@@ -84,5 +83,5 @@ try:
                 )
             )
 
-except ImportError as e:
+except ImportError:
     pass
