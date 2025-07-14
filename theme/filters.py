@@ -7,25 +7,29 @@ from django.utils.html import format_html
 
 
 class RelatedFieldAjaxListFilter(RelatedFieldListFilter):
-    template = 'admin/related_field_ajax_list_filter.html'
+    template = "admin/related_field_ajax_list_filter.html"
     ajax_attrs = None
 
     def has_output(self):
         return True
 
     def field_choices(self, field, request, model_admin):
-        model = field.remote_field.model if hasattr(field, 'remote_field') else field.related_field.model
+        model = (
+            field.remote_field.model
+            if hasattr(field, "remote_field")
+            else field.related_field.model
+        )
         app_label = model._meta.app_label
         model_name = model._meta.object_name
 
         self.ajax_attrs = format_html(
-            '{0}',
+            "{0}",
             flatatt(
                 {
-                    'data-app-label': app_label,
-                    'data-model': model_name,
-                    'data-ajax--url': reverse('surface_theme:model_lookup'),
-                    'data-queryset--lookup': self.lookup_kwarg,
+                    "data-app-label": app_label,
+                    "data-model": model_name,
+                    "data-ajax--url": reverse("surface_theme:model_lookup"),
+                    "data-queryset--lookup": self.lookup_kwarg,
                 }
             ),
         )
@@ -33,8 +37,13 @@ class RelatedFieldAjaxListFilter(RelatedFieldListFilter):
         if self.lookup_val is None:
             return []
 
+        if isinstance(
+            self.lookup_val, list
+        ):  # Django 5.0: filter values from query parameters can be passed as lists
+            self.lookup_val = self.lookup_val[0]
+
         other_model = get_model_from_relation(field)
-        if hasattr(field, 'rel'):
+        if hasattr(field, "rel"):
             rel_name = field.rel.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
@@ -52,7 +61,7 @@ try:
 
     class DateRangeFilter(OriginalDateRangeFilter):
         def get_template(self):
-            return 'rangefilter/date_filter.html'
+            return "rangefilter/date_filter.html"
 
         def _get_form_fields(self):
             # this is here, because in parent DateRangeFilter AdminDateWidget
@@ -62,8 +71,10 @@ try:
                     (
                         self.lookup_kwarg_gte,
                         forms.DateField(
-                            label='',
-                            widget=AdminDateWidget(attrs={'placeholder': _('From date')}),
+                            label="",
+                            widget=AdminDateWidget(
+                                attrs={"placeholder": _("From date")}
+                            ),
                             localize=True,
                             required=False,
                         ),
@@ -71,8 +82,8 @@ try:
                     (
                         self.lookup_kwarg_lte,
                         forms.DateField(
-                            label='',
-                            widget=AdminDateWidget(attrs={'placeholder': _('To date')}),
+                            label="",
+                            widget=AdminDateWidget(attrs={"placeholder": _("To date")}),
                             localize=True,
                             required=False,
                         ),
@@ -80,5 +91,5 @@ try:
                 )
             )
 
-except ImportError as e:
+except ImportError:
     pass
